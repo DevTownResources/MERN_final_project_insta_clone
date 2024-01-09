@@ -1,10 +1,15 @@
-const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const User = require("../models/user");
 
 const signup = async (req, res) => {
   try {
     if (req.cookies.access_token) {
-      return res.redirect("/todos");
+      return res.status(400).json({
+        status: "error",
+        msg: "User already logged in",
+        data: null,
+      });
     }
     const { email, username, password } = req.body;
 
@@ -18,10 +23,14 @@ const signup = async (req, res) => {
       });
     }
 
+    // HASH PASSWORD
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     const newUser = await User.create({
       username,
       email,
-      password,
+      password: hashedPassword,
     });
 
     res.status(201).json({
@@ -57,7 +66,9 @@ const login = async (req, res) => {
     }
 
     // Authenticate user - verify password
-    if (user.password !== password) {
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
       return res.status(400).json({
         status: "error",
         msg: "Incorrect password",
