@@ -21,7 +21,7 @@ function CreatePost() {
     data.append("image", image);
     data.append("caption", caption);
     try {
-      const res = await fetch(`${SERVER_URL}/api/post`, {
+      const res = await fetch(`${SERVER_URL}/api/posts`, {
         method: "POST",
         credentials: "include",
         body: data,
