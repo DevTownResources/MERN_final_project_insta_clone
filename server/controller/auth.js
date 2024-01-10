@@ -104,4 +104,44 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { signup, login };
+const validateSession = async (req, res) => {
+  try {
+    const token = req.cookies.access_token;
+    if (!token) {
+      return res.status(400).json({
+        status: "error",
+        msg: "User not logged in",
+        data: null,
+      });
+    }
+
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+
+    const user = await User.findById(decoded.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        status: "error",
+        msg: "User not found",
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      msg: "User logged in",
+      data: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      msg: "Internal server error",
+    });
+  }
+};
+
+module.exports = { signup, login, validateSession };
