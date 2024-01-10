@@ -1,16 +1,22 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { login } from "../../redux/features/authSlice";
+import { SERVER_URL } from "../../utils/constants";
 
 function Login() {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loader, setLoader] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:8000/api/auth/login", {
+      setLoader(true);
+      const res = await fetch(`${SERVER_URL}/api/auth/login`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -19,10 +25,14 @@ function Login() {
         body: JSON.stringify({ email, password }),
       });
       if (res.ok) {
+        const { data } = await res.json();
+        dispatch(login(data));
         navigate("/");
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -49,6 +59,7 @@ function Login() {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            disabled={loader ? true : false}
           />
           <input
             class="w-full p-2 border border-gray-300 rounded"
@@ -58,12 +69,13 @@ function Login() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            disabled={loader ? true : false}
           />
           <button
             class="w-full p-2 border border-blue-500 text-blue-500 rounded hover:bg-blue-500 hover:text-white"
             id="submit"
           >
-            Sign In
+            {loader ? "Loading.." : "Sign In"}
           </button>
         </form>
         <div class="grid grid-cols-2 mt-4 text-sm">
