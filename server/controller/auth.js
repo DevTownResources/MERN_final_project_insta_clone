@@ -33,6 +33,8 @@ const signup = async (req, res) => {
       password: hashedPassword,
     });
 
+    delete newUser.password;
+
     res.status(201).json({
       status: "success",
       msg: "User created successfully",
