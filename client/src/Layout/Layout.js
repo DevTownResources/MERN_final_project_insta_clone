@@ -1,7 +1,17 @@
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/features/authSlice";
 
 function Navbar() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
+
   return (
     <nav class="bg-white shadow">
       <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
@@ -69,7 +79,11 @@ function Navbar() {
             </div>
             <div class="ml-12">
               {/* Make it into a button */}
-              <Link to="#" class="text-gray-500 hover:text-gray-900">
+              <Link
+                to="#"
+                class="text-gray-500 hover:text-gray-900"
+                onClick={handleLogout}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"

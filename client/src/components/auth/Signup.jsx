@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { SERVER_URL } from "../../utils/constants";
 
@@ -7,8 +8,14 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [loader, setLoader] = useState(false);
-
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

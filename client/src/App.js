@@ -1,14 +1,18 @@
+import { useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
-import { Provider } from "react-redux";
+import { useDispatch } from "react-redux";
 import routes from "./routes";
-import store from "./redux/store";
+import { validateToken } from "./redux/features/authSlice";
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(validateToken());
+  }, []);
+
   return (
     <div className="App">
-      <Provider store={store}>
-        <RouterProvider router={routes} />
-      </Provider>
+      <RouterProvider router={routes} />
     </div>
   );
 }

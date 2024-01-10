@@ -1,6 +1,11 @@
 const express = require("express");
 const { body } = require("express-validator");
-const { signup, login, validateSession } = require("../controller/auth");
+const {
+  signup,
+  login,
+  validateSession,
+  logout,
+} = require("../controller/auth");
 const { validate } = require("../middlewares");
 
 const router = express.Router();
@@ -17,6 +22,7 @@ router.post(
 );
 
 router.post("/login", login);
+router.post("/logout", logout);
 
 router.post("/validate-session", validateSession);
 

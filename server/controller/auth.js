@@ -144,4 +144,13 @@ const validateSession = async (req, res) => {
   }
 };
 
-module.exports = { signup, login, validateSession };
+const logout = (req, res) => {
+  res.clearCookie("access_token");
+  res.status(200).json({
+    status: "success",
+    msg: "User logged out",
+    data: null,
+  });
+};
+
+module.exports = { signup, login, validateSession, logout };
