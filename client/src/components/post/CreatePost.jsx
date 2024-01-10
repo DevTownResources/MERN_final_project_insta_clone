@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { SERVER_URL } from "../../utils/constants";
 
 function CreatePost() {
   const [caption, setCaption] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
+  const [image, setImage] = useState(null);
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.auth);
 
@@ -14,8 +16,25 @@ function CreatePost() {
     }
   }, [isAuthenticated]);
 
+  const handleSubmit = async () => {
+    const data = new FormData();
+    data.append("image", image);
+    data.append("caption", caption);
+    try {
+      const res = await fetch(`${SERVER_URL}/api/post`, {
+        method: "POST",
+        credentials: "include",
+        body: data,
+      });
+      // const file = await res.json();
+      // console.log(file);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handlePreviewImage = (e) => {
-    console.log(e.target.files[0]);
+    setImage(e.target.files[0]);
     const reader = new FileReader();
     reader.onload = () => {
       setPreviewImage(reader.result);
@@ -69,6 +88,7 @@ function CreatePost() {
         <button
           class="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
           type="button"
+          onClick={handleSubmit}
         >
           Submit
         </button>
