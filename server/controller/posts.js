@@ -19,8 +19,6 @@ const createPost = async (req, res) => {
       },
     });
 
-    console.log(post);
-
     const user = await User.findById(req.userId);
     user.posts.push(post._id);
     const updatedUser = await user.save();
@@ -59,7 +57,31 @@ const getAllPosts = async (req, res) => {
   }
 };
 
+const likePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const post = await Post.findById(id);
+    post.likes.push(req.userId);
+
+    const updatedPost = await post.save();
+
+    res.status(200).json({
+      status: "success",
+      msg: "Post liked",
+      data: updatedPost,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "error",
+      msg: "Internal server error",
+      data: null,
+    });
+  }
+};
+
 module.exports = {
   createPost,
   getAllPosts,
+  likePost,
 };

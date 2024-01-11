@@ -94,6 +94,7 @@ const login = async (req, res) => {
           id: user.id,
           email: user.email,
           name: user.name,
+          posts: user.posts,
         },
       });
   } catch (error) {
@@ -134,6 +135,7 @@ const validateSession = async (req, res) => {
         id: user.id,
         email: user.email,
         name: user.name,
+        posts: user.posts,
       },
     });
   } catch (error) {
