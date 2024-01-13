@@ -1,6 +1,7 @@
 const uploadManager = require("../utils/uploadManager");
 const Post = require("../models/post");
 const User = require("../models/user");
+const Comment = require("../models/comment");
 
 const createPost = async (req, res) => {
   try {
@@ -80,8 +81,61 @@ const likePost = async (req, res) => {
   }
 };
 
+const getAllComments = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const comments = await Comment.find({ post: id })
+      .populate("user", "username")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      status: "success",
+      msg: "Comments retrieved",
+      data: comments,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "error",
+      msg: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+const createComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { commentText } = req.body;
+
+    const comment = await Comment.create({
+      post: id,
+      commentText,
+      user: req.userId,
+    });
+
+    const populatedComment = await Comment.findById(comment._id).populate(
+      "user",
+      "username"
+    );
+
+    res.status(201).json({
+      status: "success",
+      msg: "Comment created",
+      data: populatedComment,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      msg: "Internal server error",
+      data: null,
+    });
+  }
+};
+
 module.exports = {
   createPost,
   getAllPosts,
   likePost,
+  getAllComments,
+  createComment,
 };

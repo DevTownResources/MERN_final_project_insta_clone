@@ -27,6 +27,7 @@
 
 3. Comment
    - \_id
+   - post: String
    - commentText: String
    - user: User
    - likes: [User]

@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { SERVER_URL } from "../utils/constants";
+import CommentSection from "./post/CommentSection";
 
 function Home() {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
+  const [showComments, setShowComments] = useState(false);
   const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   const setLikedOrNotInPosts = (posts) => {
@@ -120,7 +122,11 @@ function Home() {
                   </a>
 
                   {/* <!-- Comment Icon --> */}
-                  <a href="#" className="text-gray-500 hover:text-blue-500">
+                  <a
+                    href="#"
+                    className="text-gray-500 hover:text-blue-500"
+                    onClick={() => setShowComments((prev) => !prev)}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -142,47 +148,9 @@ function Home() {
                   </p>
                 </div>
               </div>
-
               {/* <!-- COMMENT SECTION --> */}
               <hr />
-              <div className="p-4">
-                <ul>
-                  {/* <!-- Replace this with a loop in your JavaScript code to generate a list item for each comment --> */}
-                  <li className="mb-2">
-                    <span className="font-bold text-indigo-500">User Name</span>
-                    <span className="ml-2 text-gray-600">
-                      This is a comment
-                    </span>
-                  </li>
-                  {/* <!-- End of loop --> */}
-                </ul>
-                {/* <!-- No Comments Message --> */}
-                {/* <!-- <p className="text-center text-gray-500">No Comments yet</p> --> */}
-              </div>
-
-              {/* <!-- Input Field and Send Icon --> */}
-              <div className="p-4 flex">
-                <input
-                  className="w-full rounded-l-md p-2 border-t mr-0 border-b border-l border-gray-200 bg-white"
-                  placeholder="Write a comment..."
-                />
-                <button className="px-3 rounded-r-md bg-indigo-500 text-white">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="h-6 w-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M14 5l7 7m0 0l-7 7m7-7H3"
-                    ></path>
-                  </svg>
-                </button>
-              </div>
+              {showComments && <CommentSection postId={post._id} />}
             </div>
           </div>
         ))}
