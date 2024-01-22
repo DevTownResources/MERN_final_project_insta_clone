@@ -13,7 +13,7 @@ connectDB();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://comment-functionality.dfwjegf0aiqqy.amplifyapp.com",
     credentials: true,
   })
 );
