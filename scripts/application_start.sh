@@ -16,8 +16,6 @@ npm i -g pm2
 #install node modules
 npm install
 
-source /home/ec2-user/insta_clone_env.sh
-
 #start our node app in the background
 pm2 start index.js --name "insta_clone"
 

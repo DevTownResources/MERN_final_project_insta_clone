@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({ path: "/home/ec2-user/insta_clone_env.env" });
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
