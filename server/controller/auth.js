@@ -149,7 +149,7 @@ const validateSession = async (req, res) => {
 };
 
 const logout = (req, res) => {
-  res.clearCookie("access_token");
+  res.clearCookie("access_token", { secure: true, sameSite: "none" });
   res.status(200).json({
     status: "success",
     msg: "User logged out",
